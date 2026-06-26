@@ -15,7 +15,7 @@ const UploadWidget = ({ value = null, onChange, disabled = false}) => {
 
   useEffect(() => {
     onChangeRef.current = onChange;
-  }, [value])
+  }, [onChange])
 
   useEffect(()=> {
       if(typeof window === 'undefined') return;
