@@ -80,6 +80,7 @@ const Create = () => {
     ];
 
     const bannerPublicId = form.watch('bannerCldPubId');
+    
     const setBannerImage = (file: any, field: any) => {
         if(file){
             field.onChange(file.url);
