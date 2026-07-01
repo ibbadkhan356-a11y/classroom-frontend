@@ -26,7 +26,7 @@ const SubjectsList = () => {
 
   const subjectTable = useTable<Subject>({
     columns: useMemo<ColumnDef<Subject>[]>(() => [
-      
+
       {
         id: 'code',
         accessorKey: 'code',
@@ -45,7 +45,7 @@ const SubjectsList = () => {
         filterFn: 'includesString'
       },
 
-      
+
       {
         id: 'department',
         accessorKey: 'department.name',
@@ -62,8 +62,8 @@ const SubjectsList = () => {
         header: () => <p className="column-title">Description</p>,
         cell: ({ getValue }) => <span className="truncate line-clamp-2">{getValue<string>()}</span>
       },
-      
-      
+
+
     ], []),
     refineCoreProps: {
       pagination: {
