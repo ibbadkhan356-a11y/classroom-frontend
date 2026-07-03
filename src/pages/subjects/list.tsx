@@ -15,14 +15,20 @@ const SubjectsList = () => {
   const [searchquery, setSearchQuery] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
 
-  const departmentFilter = selectedDepartment === 'all' ? [] : [
-    { field: 'department', operator: 'eq' as const, value: selectedDepartment }
-  ];
+  const permanentFilters = useMemo(() => {
+    const filters = [];
+    if (selectedDepartment !== 'all') {
+      filters.push({ field: 'department', operator: 'eq' as const, value: selectedDepartment });
+    }
+    if (searchquery) {
+      filters.push({ field: 'name', operator: 'contains' as const, value: searchquery });
+    }
+    return filters;
+  }, [selectedDepartment, searchquery]);
 
-  const searchFilter = searchquery ? [
-    { field: 'name', operator: 'contains' as const, value: searchquery },
-  ] : [];
 
+  const tablePagination = useMemo(() => ({ pageSize: 10, mode: 'server' as const }), []);
+  const tableSorters = useMemo(() => ({ initial: [{ field: 'id', order: 'desc' as const }] }), []);
 
   const subjectTable = useTable<Subject>({
     columns: useMemo<ColumnDef<Subject>[]>(() => [
@@ -66,21 +72,11 @@ const SubjectsList = () => {
 
     ], []),
     refineCoreProps: {
-      pagination: {
-        pageSize: 10,
-        mode: 'server',
-      },
+      pagination: tablePagination,
       filters: {
-        permanent: [...departmentFilter, ...searchFilter]
-
+        permanent: permanentFilters
       },
-      sorters: {
-        initial: [{
-          field: 'id',
-          order: 'desc'
-        }
-        ]
-      },
+      sorters: tableSorters,
     }
 
   });
