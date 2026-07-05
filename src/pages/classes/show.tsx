@@ -64,9 +64,9 @@ const Show = () => {
       <ShowViewHeader resource="classes" title='Class Details' />
 
       <div className="banner">
-        {bannerUrl ? (
+        {bannerUrl && bannerCldPubId ? (
           <AdvancedImage alt="Class Banner" cldImg={bannerPhoto
-            (bannerCldPubId ?? '', name)} />
+            (bannerCldPubId, name)} />
         ) : <div className="placeholder" />}
       </div>
 
