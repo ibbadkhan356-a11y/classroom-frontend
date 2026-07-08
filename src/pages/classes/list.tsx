@@ -1,6 +1,6 @@
 import { ListView } from "@/components/refine-ui/views/list-view.tsx";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb.tsx";
-import { Search } from "lucide-react";
+import { Search, Eye, Edit, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input.tsx";
 import { useMemo, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
@@ -12,6 +12,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge.tsx";
 import { useList } from "@refinedev/core";
 import { ShowButton } from "@/components/refine-ui/buttons/show.tsx";
+import { EditButton } from "@/components/refine-ui/buttons/edit.tsx";
+import { DeleteButton } from "@/components/refine-ui/buttons/delete.tsx";
 
 const ClassesList = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -101,10 +103,16 @@ const ClassesList = () => {
       cell: ({ getValue }) => <span className="text-foreground">{getValue<number>()}</span>,
     },
     {
-      id: 'details',
+      id: 'actions',
       size: 140,
-      header: () => <p className="column-title">Details</p>,
-      cell: ({ row }) => <ShowButton resource="classes" recordItemId={row.original.id} variant="outline" size="sm">View</ShowButton>
+      header: () => <p className="column-title text-center">Actions</p>,
+      cell: ({ row }) => (
+          <div className="flex justify-center gap-2">
+              <ShowButton resource="classes" recordItemId={row.original.id} variant="outline" size="icon" title="View"><Eye className="h-4 w-4" /></ShowButton>
+              <EditButton resource="classes" recordItemId={row.original.id} variant="outline" size="icon" title="Edit"><Edit className="h-4 w-4" /></EditButton>
+              <DeleteButton resource="classes" recordItemId={row.original.id} variant="outline" size="icon" title="Delete"><Trash2 className="h-4 w-4 text-destructive" /></DeleteButton>
+          </div>
+      )
     }
   ], []);
 

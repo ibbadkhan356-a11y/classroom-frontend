@@ -3,7 +3,8 @@ export type Subject = {
     name: string;
     code: string;
     description: string;
-    department: Department;
+    department?: Department;
+    departmentId?: number;
     createdAt?: string;
 };
 
@@ -91,6 +92,7 @@ export type Schedule = {
 
 export type Department = {
     id: number;
+    code: string;
     name: string;
     description: string;
 };
@@ -119,4 +121,13 @@ export type SignUpPayload = {
     image?: string;
     imageCldPubId?: string;
     role: UserRole;
+};
+
+export type Enrollment = {
+    id: number;
+    studentId: string;
+    classId: number;
+    student?: User;
+    class?: ClassDetails;
+    createdAt?: string;
 };

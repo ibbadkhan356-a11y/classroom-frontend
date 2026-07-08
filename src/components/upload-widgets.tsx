@@ -1,7 +1,8 @@
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "@/constants";
 import { UploadWidgetProps, UploadWidgetValue } from "@/types";
-import { UploadCloud } from "lucide-react";
+import { UploadCloud, Edit2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "./ui/button";
 
 const UploadWidget = ({ value = null, onChange, disabled = false}: UploadWidgetProps) => {
   const widgetRef = useRef<CloudinaryWidget | null>(null)
@@ -10,8 +11,10 @@ const UploadWidget = ({ value = null, onChange, disabled = false}: UploadWidgetP
   const[preview, setPreview]=useState<UploadWidgetValue | null>(value);
 
   useEffect(() =>{
-      setPreview(value)
-  },[value])
+      if (value?.url !== preview?.url || value?.publicId !== preview?.publicId) {
+          setPreview(value);
+      }
+  },[value?.url, value?.publicId])
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -59,13 +62,17 @@ const UploadWidget = ({ value = null, onChange, disabled = false}: UploadWidgetP
     if(!disabled) widgetRef.current?.open();
   }
 
-
-
   return (
     <div className="space-y-2">
       {preview ?(
-        <div className= "upload-preview">
-          <img src={preview.url} alt="Uploaded file"/>
+        <div className="relative group rounded-md overflow-hidden border border-border">
+          <img src={preview.url} alt="Uploaded file" className="w-full h-auto object-cover max-h-[300px]" />
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+             <Button type="button" variant="secondary" onClick={openWidget} disabled={disabled}>
+                <Edit2 className="w-4 h-4 mr-2" />
+                Change Image
+             </Button>
+          </div>
         </div>
       ): <div className="upload-dropzone" role="button" tabIndex={0}
           onClick={openWidget} onKeyDown={(event) => {

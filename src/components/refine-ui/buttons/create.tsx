@@ -31,7 +31,10 @@ export const CreateButton = React.forwardRef<
 >(({ resource, accessControl, meta, children, onClick, ...rest }, ref) => {
   const { hidden, disabled, LinkComponent, to, label } = useCreateButton({
     resource,
-    accessControl,
+    accessControl: accessControl ?? {
+      enabled: true,
+      hideIfUnauthorized: true,
+    },
     meta,
   });
 

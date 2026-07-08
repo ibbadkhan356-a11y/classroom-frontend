@@ -1,46 +1,34 @@
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
 import { ListView } from "@/components/refine-ui/views/list-view";
-import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "@/components/ui/select";
 import { Search, Eye, Edit, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { CreateButton } from "@/components/refine-ui/buttons/create";
-import { Department, Subject } from "@/types";
+import { Department } from "@/types";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
-import { Input } from "@/components/ui/input";
-import { useList } from "@refinedev/core";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
 import { EditButton } from "@/components/refine-ui/buttons/edit";
 import { DeleteButton } from "@/components/refine-ui/buttons/delete";
 
-const SubjectsList = () => {
+const DepartmentsList = () => {
   const [searchquery, setSearchQuery] = useState('');
-  const [selectedDepartment, setSelectedDepartment] = useState('all');
-
-  const { query: departmentsQuery } = useList<Department>({
-    resource: 'departments',
-    pagination: { pageSize: 100 }
-  });
-  const departments = departmentsQuery?.data?.data || [];
 
   const permanentFilters = useMemo(() => {
     const filters = [];
-    if (selectedDepartment !== 'all') {
-      filters.push({ field: 'department', operator: 'eq' as const, value: selectedDepartment });
-    }
     if (searchquery) {
       filters.push({ field: 'name', operator: 'contains' as const, value: searchquery });
     }
     return filters;
-  }, [selectedDepartment, searchquery]);
+  }, [searchquery]);
 
   const tablePagination = useMemo(() => ({ pageSize: 10, mode: 'server' as const }), []);
   const tableSorters = useMemo(() => ({ initial: [{ field: 'id', order: 'desc' as const }] }), []);
 
-  const subjectTable = useTable<Subject>({
-    columns: useMemo<ColumnDef<Subject>[]>(() => [
+  const departmentTable = useTable<Department>({
+    columns: useMemo<ColumnDef<Department>[]>(() => [
       {
         id: 'code',
         accessorKey: 'code',
@@ -54,19 +42,11 @@ const SubjectsList = () => {
         size: 200,
         header: () => <p className="column-title">Name</p>,
         cell: ({ getValue }) => <span className="text-foreground">{getValue<string>()}</span>,
-        filterFn: 'includesString'
-      },
-      {
-        id: 'department',
-        accessorKey: 'department.name',
-        size: 150,
-        header: () => <p className="column-title">Department</p>,
-        cell: ({ getValue }) => <Badge variant="secondary">{getValue<string>()}</Badge>
       },
       {
         id: 'description',
         accessorKey: 'description',
-        size: 200,
+        size: 300,
         header: () => <p className="column-title">Description</p>,
         cell: ({ getValue }) => <span className="truncate line-clamp-2">{getValue<string>()}</span>
       },
@@ -80,8 +60,8 @@ const SubjectsList = () => {
           return (
             <div className="flex items-center gap-2">
               <ShowButton recordItemId={id} variant="outline" size="icon" title="View Details"><Eye className="h-4 w-4" /></ShowButton>
-              <EditButton recordItemId={id} variant="outline" size="icon" title="Edit Subject"><Edit className="h-4 w-4" /></EditButton>
-              <DeleteButton recordItemId={id} variant="outline" size="icon" title="Delete Subject"><Trash2 className="h-4 w-4 text-destructive" /></DeleteButton>
+              <EditButton recordItemId={id} variant="outline" size="icon" title="Edit Department"><Edit className="h-4 w-4" /></EditButton>
+              <DeleteButton recordItemId={id} variant="outline" size="icon" title="Delete Department"><Trash2 className="h-4 w-4 text-destructive" /></DeleteButton>
             </div>
           );
         }
@@ -99,50 +79,28 @@ const SubjectsList = () => {
   return (
     <ListView>
       <Breadcrumb />
-
-      <h1 className='page-title'>Subjects</h1>
+      <h1 className='page-title'>Departments List</h1>
       <div className="intro-row">
-        <p>Manage academic subjects and their assigned departments.</p>
-
+        <p>Manage academic departments.</p>
         <div className="actions-row">
           <div className="search-field">
             <Search className="search-icon" />
-
             <Input
               type="text"
-              placeholder="Search subjects..."
+              placeholder="Search departments..."
               className="pl-10 w-full"
               value={searchquery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
-            <Select
-              value={selectedDepartment}
-              onValueChange={setSelectedDepartment}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by department" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">
-                  All Departments
-                </SelectItem>
-                {departments.map(department => (
-                  <SelectItem key={department.id} value={department.name}>
-                    {department.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
             <CreateButton />
           </div>
         </div>
       </div>
-      <DataTable table={subjectTable} />
-
+      <DataTable table={departmentTable} />
     </ListView>
-  )
-}
+  );
+};
 
-export default SubjectsList
+export default DepartmentsList;

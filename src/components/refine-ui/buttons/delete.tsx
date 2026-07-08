@@ -51,7 +51,10 @@ export const DeleteButton = React.forwardRef<
   } = useDeleteButton({
     resource,
     id: recordItemId,
-    accessControl,
+    accessControl: accessControl ?? {
+      enabled: true,
+      hideIfUnauthorized: true,
+    },
     meta,
   });
   const [open, setOpen] = React.useState(false);

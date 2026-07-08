@@ -8,6 +8,7 @@ type User = {
   firstName: string;
   lastName: string;
   fullName: string;
+  name?: string;
   email: string;
   avatar?: string;
 };
@@ -27,7 +28,8 @@ export function UserInfo() {
     );
   }
 
-  const { firstName, lastName, email } = user;
+  const name = (user as any).name || `${(user as any).firstName || ""} ${(user as any).lastName || ""}`.trim() || "User";
+  const email = user.email;
 
   return (
     <div className={cn("flex", "items-center", "gap-x-2")}>
@@ -42,7 +44,7 @@ export function UserInfo() {
         )}
       >
         <span className={cn("text-sm", "font-medium", "text-muted-foreground")}>
-          {firstName} {lastName}
+          {name}
         </span>
         <span className={cn("text-xs", "text-muted-foreground")}>{email}</span>
       </div>

@@ -8,6 +8,7 @@ type User = {
   firstName: string;
   lastName: string;
   fullName: string;
+  name?: string;
   email: string;
   avatar?: string;
 };
@@ -19,12 +20,13 @@ export function UserAvatar() {
     return <Skeleton className={cn("h-10", "w-10", "rounded-full")} />;
   }
 
-  const { fullName, avatar } = user;
+  const name = user.name || (user as any).fullName || "User";
+  const avatarUrl = user.avatar || (user as any).image;
 
   return (
     <Avatar className={cn("h-10", "w-10")}>
-      {avatar && <AvatarImage src={avatar} alt={fullName} />}
-      <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
+      {avatarUrl && <AvatarImage src={avatarUrl} alt={name} />}
+      <AvatarFallback>{getInitials(name)}</AvatarFallback>
     </Avatar>
   );
 }

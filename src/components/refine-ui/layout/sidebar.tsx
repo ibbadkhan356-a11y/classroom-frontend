@@ -25,6 +25,7 @@ import {
   useLink,
   useMenu,
   useRefineOptions,
+  useGetIdentity,
   type TreeMenuItem,
 } from "@refinedev/core";
 import { ChevronRight, ListIcon } from "lucide-react";
@@ -33,6 +34,15 @@ import React from "react";
 export function Sidebar() {
   const { open } = useShadcnSidebar();
   const { menuItems, selectedKey } = useMenu();
+  const { data: identity } = useGetIdentity<any>();
+  const role = identity?.role || "guest";
+
+  const filteredMenuItems = menuItems.filter(item => {
+    if (item.name === "users") {
+      return role === "admin";
+    }
+    return true;
+  });
 
   return (
     <ShadcnSidebar collapsible="icon" className={cn("border-none")}>
@@ -55,7 +65,7 @@ export function Sidebar() {
           }
         )}
       >
-        {menuItems.map((item: TreeMenuItem) => (
+        {filteredMenuItems.map((item: TreeMenuItem) => (
           <SidebarItem
             key={item.key || item.name}
             item={item}
